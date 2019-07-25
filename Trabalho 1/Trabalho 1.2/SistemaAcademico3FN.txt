@@ -1,0 +1,254 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2019-04-26 16:17
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: hanna
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `sisAcademico` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Aluno` (
+  `idAluno` INT(11) NOT NULL,
+  `cpf` VARCHAR(14) NULL DEFAULT NULL,
+  `nomeAluno` VARCHAR(45) NULL DEFAULT NULL,
+  `foneAluno` VARCHAR(14) NULL DEFAULT NULL,
+  `emailAluno` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idAluno`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Curso` (
+  `idCurso` INT(11) NOT NULL,
+  `nomeCurso` VARCHAR(45) NULL DEFAULT NULL,
+  `siglaCurso` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idCurso`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoCurso` (
+  `matriculaAlunoCurso` INT(11) NOT NULL,
+  `dataMatricula` VARCHAR(10) NULL DEFAULT NULL,
+  `status` VARCHAR(45) NULL DEFAULT NULL,
+  `idCurso` INT(11) NOT NULL,
+  `idAluno` INT(11) NOT NULL,
+  PRIMARY KEY (`matriculaAlunoCurso`),
+  INDEX `fk_MatriculaAlunoCurso_Curso1_idx` (`idCurso` ASC),
+  INDEX `fk_MatriculaAlunoCurso_Aluno1_idx` (`idAluno` ASC),
+  CONSTRAINT `fk_MatriculaAlunoCurso_Curso1`
+    FOREIGN KEY (`idCurso`)
+    REFERENCES `sisAcademico`.`Curso` (`idCurso`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_MatriculaAlunoCurso_Aluno1`
+    FOREIGN KEY (`idAluno`)
+    REFERENCES `sisAcademico`.`Aluno` (`idAluno`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoAnoLetivo` (
+  `matriculaAnoLetivo` INT(11) NOT NULL,
+  `anoLetivo` VARCHAR(4) NULL DEFAULT NULL,
+  `dataMatricula` VARCHAR(10) NULL DEFAULT NULL,
+  `matriculaAlunoCurso` INT(11) NOT NULL,
+  PRIMARY KEY (`matriculaAnoLetivo`),
+  INDEX `fk_MatriculaAlunoAnoLetivo_MatriculaAlunoCurso1_idx` (`matriculaAlunoCurso` ASC),
+  CONSTRAINT `fk_MatriculaAlunoAnoLetivo_MatriculaAlunoCurso1`
+    FOREIGN KEY (`matriculaAlunoCurso`)
+    REFERENCES `sisAcademico`.`MatriculaAlunoCurso` (`matriculaAlunoCurso`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoDisciplina` (
+  `idDisciplina` INT(11) NOT NULL,
+  `matriculaAnoLetivo` INT(11) NOT NULL,
+  INDEX `fk_MatriculaAlunoDisciplina_Disciplina2_idx` (`idDisciplina` ASC),
+  PRIMARY KEY (`idDisciplina`, `matriculaAnoLetivo`),
+  INDEX `fk_MatriculaAlunoDisciplina_MatriculaAlunoAnoLetivo1_idx` (`matriculaAnoLetivo` ASC),
+  CONSTRAINT `fk_MatriculaAlunoDisciplina_Disciplina2`
+    FOREIGN KEY (`idDisciplina`)
+    REFERENCES `sisAcademico`.`Disciplina` (`idDisciplina`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_MatriculaAlunoDisciplina_MatriculaAlunoAnoLetivo1`
+    FOREIGN KEY (`matriculaAnoLetivo`)
+    REFERENCES `sisAcademico`.`MatriculaAlunoAnoLetivo` (`matriculaAnoLetivo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Disciplina` (
+  `idDisciplina` INT(11) NOT NULL,
+  `nomeDisciplina` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idDisciplina`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`DisciplinaProfessor` (
+  `idDisciplinaProfessor` INT(11) NOT NULL,
+  `dataInicio` VARCHAR(10) NULL DEFAULT NULL,
+  `idProfessor` INT(11) NOT NULL,
+  `idDisciplina` INT(11) NOT NULL,
+  PRIMARY KEY (`idDisciplinaProfessor`),
+  INDEX `fk_DisciplinaProfessor_Professor_idx` (`idProfessor` ASC),
+  INDEX `fk_DisciplinaProfessor_Disciplina1_idx` (`idDisciplina` ASC),
+  CONSTRAINT `fk_DisciplinaProfessor_Professor`
+    FOREIGN KEY (`idProfessor`)
+    REFERENCES `sisAcademico`.`Professor` (`idProfessor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_DisciplinaProfessor_Disciplina1`
+    FOREIGN KEY (`idDisciplina`)
+    REFERENCES `sisAcademico`.`Disciplina` (`idDisciplina`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Professor` (
+  `idProfessor` INT(11) NOT NULL,
+  `nomeProfessor` VARCHAR(45) NULL DEFAULT NULL,
+  `emailProfessor` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idProfessor`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- MySQL Workbench Synchronization
+-- Generated: 2019-04-26 16:17
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: hanna
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `sisAcademico` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Aluno` (
+  `idAluno` INT(11) NOT NULL,
+  `cpf` VARCHAR(14) NULL DEFAULT NULL,
+  `nomeAluno` VARCHAR(45) NULL DEFAULT NULL,
+  `foneAluno` VARCHAR(14) NULL DEFAULT NULL,
+  `emailAluno` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idAluno`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Curso` (
+  `idCurso` INT(11) NOT NULL,
+  `nomeCurso` VARCHAR(45) NULL DEFAULT NULL,
+  `siglaCurso` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idCurso`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoCurso` (
+  `matriculaAlunoCurso` INT(11) NOT NULL,
+  `dataMatricula` VARCHAR(10) NULL DEFAULT NULL,
+  `status` VARCHAR(45) NULL DEFAULT NULL,
+  `idCurso` INT(11) NOT NULL,
+  `idAluno` INT(11) NOT NULL,
+  PRIMARY KEY (`matriculaAlunoCurso`),
+  INDEX `fk_MatriculaAlunoCurso_Curso1_idx` (`idCurso` ASC),
+  INDEX `fk_MatriculaAlunoCurso_Aluno1_idx` (`idAluno` ASC),
+  CONSTRAINT `fk_MatriculaAlunoCurso_Curso1`
+    FOREIGN KEY (`idCurso`)
+    REFERENCES `sisAcademico`.`Curso` (`idCurso`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_MatriculaAlunoCurso_Aluno1`
+    FOREIGN KEY (`idAluno`)
+    REFERENCES `sisAcademico`.`Aluno` (`idAluno`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoAnoLetivo` (
+  `matriculaAnoLetivo` INT(11) NOT NULL,
+  `anoLetivo` VARCHAR(4) NULL DEFAULT NULL,
+  `dataMatricula` VARCHAR(10) NULL DEFAULT NULL,
+  `matriculaAlunoCurso` INT(11) NOT NULL,
+  PRIMARY KEY (`matriculaAnoLetivo`),
+  INDEX `fk_MatriculaAlunoAnoLetivo_MatriculaAlunoCurso1_idx` (`matriculaAlunoCurso` ASC),
+  CONSTRAINT `fk_MatriculaAlunoAnoLetivo_MatriculaAlunoCurso1`
+    FOREIGN KEY (`matriculaAlunoCurso`)
+    REFERENCES `sisAcademico`.`MatriculaAlunoCurso` (`matriculaAlunoCurso`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`MatriculaAlunoDisciplina` (
+  `idDisciplina` INT(11) NOT NULL,
+  `matriculaAnoLetivo` INT(11) NOT NULL,
+  INDEX `fk_MatriculaAlunoDisciplina_Disciplina2_idx` (`idDisciplina` ASC),
+  PRIMARY KEY (`idDisciplina`, `matriculaAnoLetivo`),
+  INDEX `fk_MatriculaAlunoDisciplina_MatriculaAlunoAnoLetivo1_idx` (`matriculaAnoLetivo` ASC),
+  CONSTRAINT `fk_MatriculaAlunoDisciplina_Disciplina2`
+    FOREIGN KEY (`idDisciplina`)
+    REFERENCES `sisAcademico`.`Disciplina` (`idDisciplina`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_MatriculaAlunoDisciplina_MatriculaAlunoAnoLetivo1`
+    FOREIGN KEY (`matriculaAnoLetivo`)
+    REFERENCES `sisAcademico`.`MatriculaAlunoAnoLetivo` (`matriculaAnoLetivo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Disciplina` (
+  `idDisciplina` INT(11) NOT NULL,
+  `nomeDisciplina` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idDisciplina`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`DisciplinaProfessor` (
+  `idDisciplinaProfessor` INT(11) NOT NULL,
+  `dataInicio` VARCHAR(10) NULL DEFAULT NULL,
+  `idProfessor` INT(11) NOT NULL,
+  `idDisciplina` INT(11) NOT NULL,
+  PRIMARY KEY (`idDisciplinaProfessor`),
+  INDEX `fk_DisciplinaProfessor_Professor_idx` (`idProfessor` ASC),
+  INDEX `fk_DisciplinaProfessor_Disciplina1_idx` (`idDisciplina` ASC),
+  CONSTRAINT `fk_DisciplinaProfessor_Professor`
+    FOREIGN KEY (`idProfessor`)
+    REFERENCES `sisAcademico`.`Professor` (`idProfessor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_DisciplinaProfessor_Disciplina1`
+    FOREIGN KEY (`idDisciplina`)
+    REFERENCES `sisAcademico`.`Disciplina` (`idDisciplina`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sisAcademico`.`Professor` (
+  `idProfessor` INT(11) NOT NULL,
+  `nomeProfessor` VARCHAR(45) NULL DEFAULT NULL,
+  `emailProfessor` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idProfessor`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
