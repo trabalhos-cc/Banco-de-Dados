@@ -1,0 +1,63 @@
+package endereco;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import conexaoBD.Conexao;
+
+public class enderecoDAO {
+	
+	protected ResultSet resultado = null;
+	protected Statement st = null;
+	Conexao conexao = new Conexao();
+	
+	//search
+	public List <Endereco> buscarEndereco()throws Exception{
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		Connection conn = conexao.abrir();
+		
+		List<Endereco> enderecos = new ArrayList<>();
+		
+		try {
+			stmt = conn.prepareStatement("select * from endereço;");
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Endereco end = new Endereco();
+				end.setIdEndereco(rs.getInt("idEndereco"));
+				end.setCEP(rs.getString("CEP"));
+				enderecos.add(end);
+			}
+		}catch(SQLException e) {
+			System.err.println(e);
+		}
+		conn.close();
+		return enderecos;
+	}
+	
+	//insert
+	public void inserirEndereco (int idEndereco, String CEP) throws Exception{
+		
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("insert into endereço (idEndereço, CEP");
+		sql.append("values (?,?);");
+		
+		Connection conn = conexao.abrir();
+		st = conn.createStatement();
+		
+		PreparedStatement comando = conn.prepareStatement(sql.toString());
+		comando.setInt(1, idEndereco);
+		comando.setString(2, CEP);
+		comando.executeUpdate();
+		
+		comando.close();
+		conn.close();
+	}
+	
+	/*delete*/
+	
+
+}
