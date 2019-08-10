@@ -28,6 +28,9 @@ public class enderecoDAO {
 				Endereco end = new Endereco();
 				end.setIdEndereco(rs.getInt("idEndereco"));
 				end.setCEP(rs.getString("CEP"));
+				end.setIdCidade(rs.getInt("idCidade"));
+				end.setIdbairro(rs.getInt("idBairro"));
+				end.setIdLogradouro(rs.getInt("idLogradouro"));
 				enderecos.add(end);
 			}
 		}catch(SQLException e) {
@@ -38,12 +41,13 @@ public class enderecoDAO {
 	}
 	
 	//insert
-	public void inserirEndereco (int idEndereco, String CEP) throws Exception{
+	public void inserirEndereco (int idEndereco, String CEP, int idCidade,
+			int idBairro, int idLogradouro) throws Exception{
 		
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into endereço (idEndereço, CEP");
-		sql.append("values (?,?);");
+		sql.append("insert into endereço (idEndereço, CEP, idCidade, idBairro, idLogradouro");
+		sql.append("values (?,?,?,?,?);");
 		
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
@@ -51,6 +55,9 @@ public class enderecoDAO {
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
 		comando.setInt(1, idEndereco);
 		comando.setString(2, CEP);
+		comando.setInt(3, idCidade);
+		comando.setInt(4, idBairro);
+		comando.setInt(5, idLogradouro);
 		comando.executeUpdate();
 		
 		comando.close();
