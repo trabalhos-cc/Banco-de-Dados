@@ -1,9 +1,6 @@
 package conexaoBD;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Conexao {
 
@@ -15,8 +12,8 @@ public class Conexao {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			//conn = (Connection)DriverManager.getConnection
-					//(" ", "root", "root");
+			conn = (Connection)DriverManager.getConnection
+					("jdbc:mysql://localhost:3306/fatura", "root", "root");
 			
 			createStatement();
 			

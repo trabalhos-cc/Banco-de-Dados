@@ -1,12 +1,16 @@
 package endereco;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import conexaoBD.Conexao;
+import bin.conexaoBD.Conexao;
 
-public class enderecoDAO {
+public class EnderecoDAO {
 	
 	protected ResultSet resultado = null;
 	protected Statement st = null;
@@ -17,6 +21,7 @@ public class enderecoDAO {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		Connection conn = conexao.abrir();
+		System.out.println("Conexão Aberta com Basedata ....");
 		
 		List<Endereco> enderecos = new ArrayList<>();
 		
@@ -37,6 +42,7 @@ public class enderecoDAO {
 			System.err.println(e);
 		}
 		conn.close();
+		System.out.println("Conexão Fechada com Basedata ....");
 		return enderecos;
 	}
 	

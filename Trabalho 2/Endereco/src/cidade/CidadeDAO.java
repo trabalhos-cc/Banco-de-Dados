@@ -1,11 +1,14 @@
 package cidade;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import conexaoBD.Conexao;
-import endereco.Endereco;
+import bin.conexaoBD.Conexao;
 
 public class CidadeDAO {
 
