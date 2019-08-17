@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import bin.conexaoBD.Conexao;
+import conexaoBD.Conexao;
 
 public class PaisDAO {
 

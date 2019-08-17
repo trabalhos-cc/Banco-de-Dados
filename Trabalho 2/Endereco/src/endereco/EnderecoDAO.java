@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import bin.conexaoBD.Conexao;
+import conexaoBD.Conexao;
 
 public class EnderecoDAO {
 	
@@ -49,6 +49,8 @@ public class EnderecoDAO {
 	//insert
 	public void inserirEndereco (int idEndereco, String CEP, int idCidade,
 			int idBairro, int idLogradouro) throws Exception{
+		
+		System.out.println("entrou");
 		
 		StringBuilder sql = new StringBuilder();
 		

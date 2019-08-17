@@ -9,20 +9,20 @@ public class Conexao {
 	
 	public  Connection abrir () throws Exception{
 		
-		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = (Connection)DriverManager.getConnection
-					("jdbc:mysql://localhost:3306/fatura", "root", "root");
 			
+			if(this.conn != null) this.conn.close();
+			conn = (Connection)DriverManager.getConnection ("jdbc:mysql://localhost:3306/fatura?useSSL=false", "root", "root");
 			createStatement();
-			
-			return conn;
+		
 		}catch(Exception e) {
 			System.out.println(e);
 			System.out.println("Não foi possivel conectar!");
 		}
-		return null;
+		
+		if(conn != null) System.out.println("conectado");
+		return conn;
 	}
 	
 	public Statement getStatement() {
@@ -30,9 +30,7 @@ public class Conexao {
 	}
 	
 	protected void createStatement() throws SQLException {
-		if (this.stmt != null)
-			this.stmt.close();
-
+		if (this.stmt != null) this.stmt.close();
 		stmt = conn.createStatement();
 	}
 }

@@ -8,8 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import bin.conexaoBD.Conexao;
-import logradouro.Logradouro;
+import conexaoBD.Conexao;
 
 public class UfDAO {
 
