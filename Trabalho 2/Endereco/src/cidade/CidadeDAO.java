@@ -12,6 +12,7 @@ import conexaoBD.Conexao;
 
 public class CidadeDAO {
 
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -43,20 +44,21 @@ public class CidadeDAO {
 		}
 
 		//insert
-		public void inserirCidades (int idCidade, String nomeCidade, int idUf)throws Exception{
+		public void inserirCidades (String nomeCidade, String idUf)throws Exception{
 			
+			if(CidadeDAO.existData(nomeCidade)) return;
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("insert into cidade (idCidade, nomeCidade, idUF");
-			sql.append("values (?,?,?);");
+			sql.append("insert into cidade (idCidade, nomeCidade, idUF)");
+			sql.append("select ?, ? , idUF from UF where nome = ?");
 			
 			Connection conn = conexao.abrir();
 			st = conn.createStatement();
 			
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			comando.setInt(1, idCidade);
+			comando.setInt(1, id);
 			comando.setString(2, nomeCidade);
-			comando.setInt(3, idUf);
+			comando.setString(3, idUf);
 			comando.executeUpdate();
 			
 			comando.close();
@@ -64,4 +66,21 @@ public class CidadeDAO {
 		}
 		
 		/*delete*/
+		
+		public static boolean existData (String nome)  throws Exception{
+			CidadeDAO tp = new CidadeDAO ();
+			List<Cidade> tipos = new ArrayList<>(); 
+			
+			tipos = tp.buscarCidades();
+			CidadeDAO.id = tipos.size();
+			for(int i = 0; i < tipos.size(); i++) {
+				Cidade t = new Cidade();
+				t = tipos.get(i);
+				if(t.getNomeCidade().equals(nome)) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
 }

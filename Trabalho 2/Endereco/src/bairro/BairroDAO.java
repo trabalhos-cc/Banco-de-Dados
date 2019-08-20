@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import conexaoBD.Conexao;
+import logradouro.Logradouro;
+import logradouro.LogradouroDAO;
 
 public class BairroDAO {
 
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -31,7 +34,7 @@ public class BairroDAO {
 			while(rs.next()) {
 				Bairro b = new Bairro();
 				b.setIdBairro(rs.getInt("idBairro"));
-				b.setNomeBairro(rs.getString("nomeBairro"));
+				b.setNomeBairro(rs.getString("nome"));
 				bairros.add(b);
 			}
 		}catch(SQLException e) {
@@ -42,18 +45,19 @@ public class BairroDAO {
 		}
 		
 		//insert
-		public void inserirEndereco (int idBairro, String nomeBairro) throws Exception{
+		public void inserirBairro (String nomeBairro) throws Exception{
 			
+			if(BairroDAO.existData(nomeBairro)) return;
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("insert into bairro (idBairro, nomeBairro");
+			sql.append("insert into bairro (idbairro, nome)");
 			sql.append("values (?,?);");
 			
 			Connection conn = conexao.abrir();
 			st = conn.createStatement();
 			
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			comando.setInt(1, idBairro);
+			comando.setInt(1, id);
 			comando.setString(2, nomeBairro);
 			comando.executeUpdate();
 			
@@ -62,5 +66,22 @@ public class BairroDAO {
 		}
 		
 		/*delete*/
+		
+		public static boolean existData (String nome)  throws Exception{
+			BairroDAO tp = new BairroDAO ();
+			List<Bairro> tipos = new ArrayList<>(); 
+			
+			tipos = tp.buscarBairro();
+			BairroDAO.id = tipos.size();
+			for(int i = 0; i < tipos.size(); i++) {
+				Bairro t = new Bairro();
+				t = tipos.get(i);
+				if(t.getNomeBairro().equals(nome)) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 }

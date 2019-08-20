@@ -10,7 +10,7 @@ public class Menu {
 		
 		Scanner sc = new Scanner(System.in);
 		Scanner s;
-		char x;
+		boolean x = false;
 		
 		do {
 		
@@ -18,10 +18,10 @@ public class Menu {
 			System.out.println("[1] - Cadastrar");
 			System.out.println("[2] - Buscar");
 			System.out.println("[3] - Emitir fatura");
+			System.out.println("[4] - Sair");
 			System.out.println("----------------------------------------------------");
 			
 			int op = sc.nextInt();
-			System.out.println(op);
 			
 			try {
 				if(op == 1) {
@@ -34,16 +34,18 @@ public class Menu {
 				if(op == 3) {
 					/*emite uma fatura */
 				}
+				if(op == 4) {
+					/*Sair*/
+					x = true;
+				}
 				
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			System.out.println("Continuar? [s/n]");
 			s = new Scanner(System.in);
-			x = s.next().charAt(0);
 			
-		}while(x != 'n');
+		}while(x != true);
 		
 		System.out.println("Saindo do programa ...");
 		sc.close();
@@ -53,6 +55,6 @@ public class Menu {
 	public static void menuCadastro() {
 		
 		System.out.println("menucadastro");
-		Cadastrar.cadastrarEndereco();
+		Cadastrar.cadastrar();
 	}
 }

@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import conexaoBD.Conexao;
+import logradouro.Logradouro;
+import logradouro.LogradouroDAO;
 
 public class PaisDAO {
 
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -25,12 +28,12 @@ public class PaisDAO {
 		List<Pais> paises = new ArrayList<>();
 		
 		try {
-			stmt = conn.prepareStatement("select * from pais;");
+			stmt = conn.prepareStatement("select * from país;");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
 				Pais p = new Pais();
-				p.setIdPais(rs.getInt("idPais"));
+				p.setIdPais(rs.getInt("idPaís"));
 				p.setNome(rs.getString("nome"));
 				paises.add(p);
 			}
@@ -42,18 +45,19 @@ public class PaisDAO {
 	}
 	
 	//insert
-	public void inserirPais (int idPais, String nome) throws Exception{
+	public void inserirPais (String nome) throws Exception{
 		
+		if(PaisDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into pais (idPais, nome");
+		sql.append("insert into país (idPaís, nome)");
 		sql.append("values (?,?);");
 		
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
-		comando.setInt(1, idPais);
+		comando.setInt(1, id);
 		comando.setString(2, nome);
 		comando.executeUpdate();
 		
@@ -62,5 +66,20 @@ public class PaisDAO {
 	}
 	
 	/*delete*/
-	
+	public static boolean existData (String nome)  throws Exception{
+		PaisDAO tp = new PaisDAO ();
+		List<Pais> tipos = new ArrayList<>(); 
+		
+		tipos = tp.buscarPais();
+		PaisDAO.id = tipos.size();
+		for(int i = 0; i < tipos.size(); i++) {
+			Pais t = new Pais();
+			t = tipos.get(i);
+			if(t.getNome().equals(nome)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

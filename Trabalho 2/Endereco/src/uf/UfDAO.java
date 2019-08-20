@@ -12,6 +12,7 @@ import conexaoBD.Conexao;
 
 public class UfDAO {
 
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -43,20 +44,21 @@ public class UfDAO {
 	}
 	
 	//insert
-	public void inserirUf (int idUf, String nome, int idPais) throws Exception{
+	public void inserirUf (String nome, String idPais) throws Exception{
 		
+		if(UfDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into uf (idUf, nome, idPais");
-		sql.append("values (?,?,?);");
-		
+		sql.append("insert into UF (idUF, nome, idPaís)");
+		sql.append("select ?, ? , idPaís from país where nome = ?");
+			
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
-		comando.setInt(1, idUf);
+		comando.setInt(1, id);
 		comando.setString(2, nome);
-		comando.setInt(3, idPais);
+		comando.setString(3, idPais);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -64,4 +66,21 @@ public class UfDAO {
 	}
 	
 	/*delete*/
+	public static boolean existData (String nome)  throws Exception{
+		UfDAO tp = new UfDAO ();
+		List<Uf> tipos = new ArrayList<>(); 
+		
+		tipos = tp.buscarUf();
+		UfDAO.id = tipos.size();
+		System.out.println(id);
+		for(int i = 0; i < tipos.size(); i++) {
+			Uf t = new Uf();
+			t = tipos.get(i);
+			if(t.getNome().equals(nome)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

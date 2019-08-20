@@ -12,6 +12,7 @@ import conexaoBD.Conexao;
 
 public class LogradouroDAO {
 
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -43,20 +44,21 @@ public class LogradouroDAO {
 	}
 	
 	//insert
-	public void inserirLogradouro (int idLogradouro, String nome, int idTipoLogradouro) throws Exception{
+	public void inserirLogradouro (String nome, String tipo) throws Exception{
 		
+		if(LogradouroDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into logradouro (idLogradouro, nome, idTipoLogradouro");
-		sql.append("values (?,?,?);");
-		
+		sql.append("insert into logradouro (idLogradouro, nome, idTipoLogradouro)");
+		sql.append("select ?, ? , idTipoLogradouro from TipoLogradouro where nome = ?");
+			
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
-		comando.setInt(1, idLogradouro);
+		comando.setInt(1, id);
 		comando.setString(2, nome);
-		comando.setInt(3, idTipoLogradouro);
+		comando.setString(3, tipo);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -64,4 +66,21 @@ public class LogradouroDAO {
 	}
 	
 	/*delete*/
+	
+	public static boolean existData (String nome)  throws Exception{
+		LogradouroDAO tp = new LogradouroDAO ();
+		List<Logradouro> tipos = new ArrayList<>(); 
+		
+		tipos = tp.buscarLogradouro();
+		LogradouroDAO.id = tipos.size();
+		for(int i = 0; i < tipos.size(); i++) {
+			Logradouro t = new Logradouro();
+			t = tipos.get(i);
+			if(t.getNome().equals(nome)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

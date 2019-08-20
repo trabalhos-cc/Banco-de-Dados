@@ -21,7 +21,6 @@ public class Conexao {
 			System.out.println("Não foi possivel conectar!");
 		}
 		
-		if(conn != null) System.out.println("conectado");
 		return conn;
 	}
 	

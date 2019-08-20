@@ -12,6 +12,7 @@ import conexaoBD.Conexao;
 
 public class EnderecoDAO {
 	
+	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -21,7 +22,6 @@ public class EnderecoDAO {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		Connection conn = conexao.abrir();
-		System.out.println("Conexão Aberta com Basedata ....");
 		
 		List<Endereco> enderecos = new ArrayList<>();
 		
@@ -42,30 +42,32 @@ public class EnderecoDAO {
 			System.err.println(e);
 		}
 		conn.close();
-		System.out.println("Conexão Fechada com Basedata ....");
 		return enderecos;
 	}
 	
 	//insert
-	public void inserirEndereco (int idEndereco, String CEP, int idCidade,
-			int idBairro, int idLogradouro) throws Exception{
+	public void inserirEndereco (String CEP, String idCidade,
+			String idBairro, String idLogradouro) throws Exception{
 		
-		System.out.println("entrou");
 		
+		if(EnderecoDAO.existData(CEP)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into endereço (idEndereço, CEP, idCidade, idBairro, idLogradouro");
-		sql.append("values (?,?,?,?,?);");
+		sql.append("insert into endereço (idEndereço, CEP, idCidade, idBairro, idLogradouro)");
+		sql.append("select ?, ? , ");
+		sql.append("(select idcidade from cidade where nomeCidade = ?), ");
+		sql.append("(select idbairro from bairro where nome = ?),");
+		sql.append("(select idlogradouro from logradouro where nome = ?)");
 		
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
-		comando.setInt(1, idEndereco);
+		comando.setInt(1, id);
 		comando.setString(2, CEP);
-		comando.setInt(3, idCidade);
-		comando.setInt(4, idBairro);
-		comando.setInt(5, idLogradouro);
+		comando.setString(3, idCidade);
+		comando.setString(4, idBairro);
+		comando.setString(5, idLogradouro);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -74,5 +76,20 @@ public class EnderecoDAO {
 	
 	/*delete*/
 	
-
+	public static boolean existData (String CEP)  throws Exception{
+		EnderecoDAO tp = new EnderecoDAO ();
+		List<Endereco> tipos = new ArrayList<>(); 
+		
+		tipos = tp.buscarEndereco();
+		EnderecoDAO.id = tipos.size();
+		for(int i = 0; i < tipos.size(); i++) {
+			Endereco t = new Endereco();
+			t = tipos.get(i);
+			if(t.getCEP().equals(CEP)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
