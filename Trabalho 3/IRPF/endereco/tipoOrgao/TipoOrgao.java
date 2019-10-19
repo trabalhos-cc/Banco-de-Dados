@@ -4,6 +4,7 @@ public class TipoOrgao {
 
 	private int idTipoOrgao;
 	private String nome;
+	
 	public int getIdTipoOrgao() {
 		return idTipoOrgao;
 	}
