@@ -1,4 +1,4 @@
-package endereco.bairro;
+package bairro;
 
 public class Bairro {
 

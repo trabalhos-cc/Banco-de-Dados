@@ -1,4 +1,4 @@
-package endereco.pais;
+package pais;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

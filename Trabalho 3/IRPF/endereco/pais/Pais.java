@@ -1,4 +1,4 @@
-package endereco.pais;
+package pais;
 
 public class Pais {
 

@@ -1,4 +1,4 @@
-package endereco.logradouro;
+package tipoLogradouro;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import conexaoBD.Conexao;
 
-public class LogradouroDAO {
+public class TipoLogradouroDAO {
 
 	protected static int id = 0;
 	protected ResultSet resultado = null;
@@ -18,47 +18,45 @@ public class LogradouroDAO {
 	Conexao conexao = new Conexao();
 	
 	//search
-	public List <Logradouro> buscarLogradouro()throws Exception{
+	public List <TipoLogradouro> buscarTipoLogradouro()throws Exception{
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		Connection conn = conexao.abrir();
 		
-		List<Logradouro> logradouros = new ArrayList<>();
+		List<TipoLogradouro> tipos = new ArrayList<>();
 		
 		try {
-			stmt = conn.prepareStatement("select * from logradouro;");
+			stmt = conn.prepareStatement("select * from tipoLogradouro;");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				Logradouro log = new Logradouro();
-				log.setIdLogradouro(rs.getInt("idLogradouro"));
-				log.setNome(rs.getString("nome"));
-				log.setIdTipoLogradouro(rs.getInt("idTipoLogradouro"));
-				logradouros.add(log);
+				TipoLogradouro tp = new TipoLogradouro();
+				tp.setIdTipoLogradouro(rs.getInt("idTipoLogradouro"));
+				tp.setNome(rs.getString("nome"));
+				tipos.add(tp);
 			}
 		}catch(SQLException e) {
 			System.err.println(e);
 		}
 		conn.close();
-		return logradouros;
+		return tipos;
 	}
 	
 	//insert
-	public void inserirLogradouro (String nome, String tipo) throws Exception{
+	public void inserirTipoLogradouro (String nome) throws Exception{
 		
-		if(LogradouroDAO.existData(nome)) return;
+		if(TipoLogradouroDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into logradouro (idLogradouro, nome, idTipoLogradouro)");
-		sql.append("select ?, ? , idTipoLogradouro from TipoLogradouro where nome = ?");
-			
+		sql.append("insert into tipoLogradouro (idtipoLogradouro, nome)");
+		sql.append("values (?,?);");
+		
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
 		comando.setInt(1, id);
 		comando.setString(2, nome);
-		comando.setString(3, tipo);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -68,13 +66,13 @@ public class LogradouroDAO {
 	/*delete*/
 	
 	public static boolean existData (String nome)  throws Exception{
-		LogradouroDAO tp = new LogradouroDAO ();
-		List<Logradouro> tipos = new ArrayList<>(); 
+		TipoLogradouroDAO tp = new TipoLogradouroDAO ();
+		List<TipoLogradouro> tipos = new ArrayList<>(); 
 		
-		tipos = tp.buscarLogradouro();
-		LogradouroDAO.id = tipos.size();
+		tipos = tp.buscarTipoLogradouro();
+		TipoLogradouroDAO.id = tipos.size();
 		for(int i = 0; i < tipos.size(); i++) {
-			Logradouro t = new Logradouro();
+			TipoLogradouro t = new TipoLogradouro();
 			t = tipos.get(i);
 			if(t.getNome().equals(nome)) {
 				return true;

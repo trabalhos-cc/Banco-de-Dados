@@ -1,4 +1,4 @@
-package endereco.cidade;
+package cidade;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

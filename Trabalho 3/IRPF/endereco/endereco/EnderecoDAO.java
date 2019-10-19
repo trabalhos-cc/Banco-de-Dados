@@ -1,4 +1,4 @@
-package endereco.endereco;
+package endereco;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

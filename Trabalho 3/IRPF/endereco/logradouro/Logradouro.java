@@ -1,4 +1,4 @@
-package endereco.logradouro;
+package logradouro;
 
 public class Logradouro {
 

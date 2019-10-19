@@ -1,4 +1,4 @@
-package endereco.endereco;
+package endereco;
 
 public class Endereco {
 
@@ -7,7 +7,21 @@ public class Endereco {
 	private int idCidade;
 	private int idbairro;
 	private int idLogradouro;
+	private int tipoEndereco;
+	private int enderecoExterior;
 	
+	public int getEnderecoExterior() {
+		return enderecoExterior;
+	}
+	public void setEnderecoExterior(int enderecoExterior) {
+		this.enderecoExterior = enderecoExterior;
+	}
+	public int getTipoEndereco() {
+		return tipoEndereco;
+	}
+	public void setTipoEndereco(int tipoEndereco) {
+		this.tipoEndereco = tipoEndereco;
+	}
 	public int getIdCidade() {
 		return idCidade;
 	}

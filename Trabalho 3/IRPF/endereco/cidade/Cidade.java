@@ -1,4 +1,4 @@
-package endereco.cidade;
+package cidade;
 
 public class Cidade {
 

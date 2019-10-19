@@ -1,4 +1,4 @@
-package endereco.uf;
+package logradouro;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import conexaoBD.Conexao;
 
-public class UfDAO {
+public class LogradouroDAO {
 
 	protected static int id = 0;
 	protected ResultSet resultado = null;
@@ -18,39 +18,39 @@ public class UfDAO {
 	Conexao conexao = new Conexao();
 	
 	//search
-	public List <Uf> buscarUf()throws Exception{
+	public List <Logradouro> buscarLogradouro()throws Exception{
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		Connection conn = conexao.abrir();
 		
-		List<Uf> Ufs = new ArrayList<>();
+		List<Logradouro> logradouros = new ArrayList<>();
 		
 		try {
-			stmt = conn.prepareStatement("select * from Uf;");
+			stmt = conn.prepareStatement("select * from logradouro;");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				Uf uf = new Uf();
-				uf.setIdUF(rs.getInt("idUf"));
-				uf.setNome(rs.getString("nome"));
-				uf.setIdPais(rs.getInt("idPais"));
-				Ufs.add(uf);
+				Logradouro log = new Logradouro();
+				log.setIdLogradouro(rs.getInt("idLogradouro"));
+				log.setNome(rs.getString("nome"));
+				log.setIdTipoLogradouro(rs.getInt("idTipoLogradouro"));
+				logradouros.add(log);
 			}
 		}catch(SQLException e) {
 			System.err.println(e);
 		}
 		conn.close();
-		return Ufs;
+		return logradouros;
 	}
 	
 	//insert
-	public void inserirUf (String nome, String idPais) throws Exception{
+	public void inserirLogradouro (String nome, String tipo) throws Exception{
 		
-		if(UfDAO.existData(nome)) return;
+		if(LogradouroDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into UF (idUF, nome, idPaís)");
-		sql.append("select ?, ? , idPaís from país where nome = ?");
+		sql.append("insert into logradouro (idLogradouro, nome, idTipoLogradouro)");
+		sql.append("select ?, ? , idTipoLogradouro from TipoLogradouro where nome = ?");
 			
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
@@ -58,7 +58,7 @@ public class UfDAO {
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
 		comando.setInt(1, id);
 		comando.setString(2, nome);
-		comando.setString(3, idPais);
+		comando.setString(3, tipo);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -66,15 +66,15 @@ public class UfDAO {
 	}
 	
 	/*delete*/
+	
 	public static boolean existData (String nome)  throws Exception{
-		UfDAO tp = new UfDAO ();
-		List<Uf> tipos = new ArrayList<>(); 
+		LogradouroDAO tp = new LogradouroDAO ();
+		List<Logradouro> tipos = new ArrayList<>(); 
 		
-		tipos = tp.buscarUf();
-		UfDAO.id = tipos.size();
-		System.out.println(id);
+		tipos = tp.buscarLogradouro();
+		LogradouroDAO.id = tipos.size();
 		for(int i = 0; i < tipos.size(); i++) {
-			Uf t = new Uf();
+			Logradouro t = new Logradouro();
 			t = tipos.get(i);
 			if(t.getNome().equals(nome)) {
 				return true;

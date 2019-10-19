@@ -1,4 +1,4 @@
-package endereco.uf;
+package uf;
 
 public class Uf {
 
