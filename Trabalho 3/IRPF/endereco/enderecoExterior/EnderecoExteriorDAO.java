@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import bairro.Bairro;
 import conexaoBD.Conexao;
 
 public class EnderecoExteriorDAO {
