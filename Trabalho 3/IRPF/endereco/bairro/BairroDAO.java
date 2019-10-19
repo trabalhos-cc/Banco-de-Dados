@@ -65,6 +65,7 @@ public class BairroDAO {
 		
 		/*delete*/
 		
+		
 		public static boolean existData (String nome)  throws Exception{
 			BairroDAO tp = new BairroDAO ();
 			List<Bairro> tipos = new ArrayList<>(); 
