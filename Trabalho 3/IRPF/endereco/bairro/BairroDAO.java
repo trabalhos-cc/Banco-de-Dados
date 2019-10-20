@@ -12,7 +12,6 @@ import conexaoBD.Conexao;
 
 public class BairroDAO {
 
-	protected static int id = 0;
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
@@ -55,7 +54,7 @@ public class BairroDAO {
 			st = conn.createStatement();
 			
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			comando.setInt(1, id);
+			comando.setInt(1, maxId());
 			comando.setString(2, nomeBairro);
 			comando.executeUpdate();
 			
@@ -64,14 +63,27 @@ public class BairroDAO {
 		}
 		
 		/*delete*/
-		
+		public void removeBairro (String nomeBairro) throws Exception{
+			if(!BairroDAO.existData(nomeBairro)) return;
+			StringBuilder sql = new StringBuilder();
+			
+			sql.append("delete from bairro where idbairro = ?;");
+			
+			Connection conn = conexao.abrir();
+			st = conn.createStatement();
+			PreparedStatement comando = conn.prepareStatement(sql.toString());
+			comando.setInt(1, buscaId(nomeBairro));
+			comando.executeUpdate();
+			
+			comando.close();
+			conn.close();
+		}
 		
 		public static boolean existData (String nome)  throws Exception{
 			BairroDAO tp = new BairroDAO ();
 			List<Bairro> tipos = new ArrayList<>(); 
-			
 			tipos = tp.buscarBairro();
-			BairroDAO.id = tipos.size();
+			
 			for(int i = 0; i < tipos.size(); i++) {
 				Bairro t = new Bairro();
 				t = tipos.get(i);
@@ -79,8 +91,39 @@ public class BairroDAO {
 					return true;
 				}
 			}
-			
 			return false;
 		}
 		
+		public static int maxId () throws Exception {
+			
+			BairroDAO tp = new BairroDAO();
+			List<Bairro> tipos = new ArrayList<>();
+			tipos = tp.buscarBairro();
+			int id = 0;
+			
+			for(int i = 0; i < tipos.size(); i++) {
+				Bairro t = new Bairro();
+				t = tipos.get(i);
+				if(t.getIdBairro() > id) {
+					id = t.getIdBairro();
+				}
+			}
+			return id + 1;
+		}
+		
+		public static int buscaId(String nome) throws Exception{
+			BairroDAO tp = new BairroDAO();
+			List<Bairro> tipos = new ArrayList<>();
+			tipos = tp.buscarBairro();
+			int id = -1;
+			
+			for(int i = 0; i < tipos.size(); i++) {
+				Bairro t = new Bairro();
+				t = tipos.get(i);
+				if(t.getNomeBairro().equals(nome)) {
+					id = t.getIdBairro();
+				}
+			}
+			return id;
+		}
 }
