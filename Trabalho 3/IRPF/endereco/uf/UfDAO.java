@@ -49,7 +49,7 @@ public class UfDAO {
 		if(UfDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into UF (idUF, nome, idPaís)");
+		sql.append("insert into uf (idUf, nome, idPaís)");
 		sql.append("select ?, ? , idPaís from país where nome = ?");
 			
 		Connection conn = conexao.abrir();
