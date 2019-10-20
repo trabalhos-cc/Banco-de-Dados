@@ -26,12 +26,12 @@ public class PaisDAO {
 		List<Pais> paises = new ArrayList<>();
 		
 		try {
-			stmt = conn.prepareStatement("select * from país;");
+			stmt = conn.prepareStatement("select * from pais;");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
 				Pais p = new Pais();
-				p.setIdPais(rs.getInt("idPaís"));
+				p.setIdPais(rs.getInt("idpais"));
 				p.setNome(rs.getString("nome"));
 				paises.add(p);
 			}
@@ -48,7 +48,7 @@ public class PaisDAO {
 		if(PaisDAO.existData(nome)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into país (idPaís, nome)");
+		sql.append("insert into pais (idpais, nome)");
 		sql.append("values (?,?);");
 		
 		Connection conn = conexao.abrir();
