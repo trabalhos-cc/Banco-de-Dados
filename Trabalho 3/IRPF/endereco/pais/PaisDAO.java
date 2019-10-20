@@ -55,7 +55,7 @@ public class PaisDAO {
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
-		comando.setInt(1, id);
+		comando.setInt(1, maxId());
 		comando.setString(2, nome);
 		comando.executeUpdate();
 		
@@ -64,12 +64,27 @@ public class PaisDAO {
 	}
 	
 	/*delete*/
+	public void removePais (String nome) throws Exception{
+		if(!PaisDAO.existData(nome)) return;
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("delete from pais where idpais = ?;");
+		
+		Connection conn = conexao.abrir();
+		st = conn.createStatement();
+		PreparedStatement comando = conn.prepareStatement(sql.toString());
+		comando.setInt(1, buscaId(nome));
+		comando.executeUpdate();
+		
+		comando.close();
+		conn.close();
+	}
+	
 	public static boolean existData (String nome)  throws Exception{
 		PaisDAO tp = new PaisDAO ();
 		List<Pais> tipos = new ArrayList<>(); 
-		
 		tipos = tp.buscarPais();
-		PaisDAO.id = tipos.size();
+		
 		for(int i = 0; i < tipos.size(); i++) {
 			Pais t = new Pais();
 			t = tipos.get(i);
@@ -77,7 +92,40 @@ public class PaisDAO {
 				return true;
 			}
 		}
-		
 		return false;
+	}
+	
+	public static int maxId () throws Exception {
+		
+		PaisDAO tp = new PaisDAO ();
+		List<Pais> tipos = new ArrayList<>(); 
+		tipos = tp.buscarPais();
+		int id = 0;
+		
+		for(int i = 0; i < tipos.size(); i++) {
+			Pais t = new Pais();
+			t = tipos.get(i);
+			if(t.getIdPais() > id) {
+				id = t.getIdPais();
+			}
+		}
+		return id + 1;
+	}
+	
+	public static int buscaId(String nome) throws Exception{
+		PaisDAO tp = new PaisDAO ();
+		List<Pais> tipos = new ArrayList<>(); 
+		tipos = tp.buscarPais();
+		int id = -1;
+		
+		for(int i = 0; i < tipos.size(); i++) {
+			Pais t = new Pais();
+			t = tipos.get(i);
+			if(t.getNome().equals(nome)) {
+				id = t.getIdPais();
+			}
+		}
+		System.out.println(id);
+		return id;
 	}
 }
