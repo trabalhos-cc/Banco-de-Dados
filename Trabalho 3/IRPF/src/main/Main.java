@@ -1,17 +1,24 @@
 package main;
 
-import bairro.BairroDAO;
+import tipoLogradouro.TipoLogradouroDAO;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception{
 		// TODO Auto-generated method stub
 
-		BairroDAO b = new BairroDAO();
+		TipoLogradouroDAO b = new TipoLogradouroDAO();
 	
 		try {
-		b.inserirBairro("Teste");
-		}catch(Exception e) {}
+			
+			b.inserirTipoLogradouro("Teste");
+			b.inserirTipoLogradouro("Teste1");
+			b.removeTipoLogradouro("Teste");
+			b.inserirTipoLogradouro("Teste2");
+			
+		}catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 
 }
