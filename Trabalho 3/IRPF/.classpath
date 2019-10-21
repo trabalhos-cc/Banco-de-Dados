@@ -4,6 +4,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="endereco"/>
 	<classpathentry kind="src" path="ocupacao"/>
+	<classpathentry kind="src" path="email"/>
+	<classpathentry kind="src" path="bensDireito"/>
+	<classpathentry kind="src" path="contribuinte"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Conexão"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
