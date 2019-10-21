@@ -7,6 +7,8 @@
 	<classpathentry kind="src" path="email"/>
 	<classpathentry kind="src" path="bensDireito"/>
 	<classpathentry kind="src" path="contribuinte"/>
+	<classpathentry kind="src" path="telefone"/>
+	<classpathentry kind="src" path="dependentes"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Conexão"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

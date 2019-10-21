@@ -1,4 +1,4 @@
-package email;
+package tipoDependentes;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,46 +10,47 @@ import java.util.List;
 
 import conexaoBD.Conexao;
 
-public class EmailDAO {
+public class TipoDependentesDAO {
+
 
 	protected ResultSet resultado = null;
 	protected Statement st = null;
 	Conexao conexao = new Conexao();
 	
 	//search
-	public List <Email> buscarEmail()throws Exception{
+	public List <TipoDependentes> buscarTipoDependentes()throws Exception{
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		Connection conn = conexao.abrir();
 			
-		List<Email> Email = new ArrayList<>();
+		List<TipoDependentes> TipoDependentes = new ArrayList<>();
 		
 		try {
-			stmt = conn.prepareStatement("select * from email;");
+			stmt = conn.prepareStatement("select * from tipoDependentes;");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				Email b = new Email();
-				b.setIdEmail(rs.getInt("idemailContribuinte"));
-				b.setEmail(rs.getString("email"));
-				b.setIdContribuinte(rs.getInt("idcontribuinte"));
-				Email.add(b);
+				TipoDependentes b = new TipoDependentes();
+				b.setIdTipodependentes(rs.getInt("idtipoDependentes"));
+				b.setNome(rs.getString("nome"));
+
+				TipoDependentes.add(b);
 			}
 		}catch(SQLException e) {
 			System.err.println(e);
 		}
 		conn.close();
-		return Email;
+		return TipoDependentes;
 		}
 		
 		//insert
-		public void inserirEmail (String nome, int id) throws Exception{
+		public void inserirTipoDependentes (String nome) throws Exception{
 			
-			if(EmailDAO.existData(nome)) return;
+			if(TipoDependentesDAO.existData(nome)) return;
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("insert into email (idemail, email, idcontribuinte)");
-			sql.append("values (?,?,?);");
+			sql.append("insert into tipoDependentes (idtipoDependentes, nome)");
+			sql.append("values (?,?);");
 			
 			Connection conn = conexao.abrir();
 			st = conn.createStatement();
@@ -57,7 +58,6 @@ public class EmailDAO {
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
 			comando.setInt(1, maxId());
 			comando.setString(2, nome);
-			comando.setInt(3, id);
 			comando.executeUpdate();
 			
 			comando.close();
@@ -65,16 +65,16 @@ public class EmailDAO {
 		}
 		
 		/*delete*/
-		public void removeEmail (String nomeEmail) throws Exception{
-			if(!EmailDAO.existData(nomeEmail)) return;
+		public void removeTipoDependentes (String nome) throws Exception{
+			if(!TipoDependentesDAO.existData(nome)) return;
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("delete from email where idemail = ?;");
+			sql.append("delete from tipoDependentes where idtipoDependentes = ?;");
 			
 			Connection conn = conexao.abrir();
 			st = conn.createStatement();
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			comando.setInt(1, buscaId(nomeEmail));
+			comando.setInt(1, buscaId(nome));
 			comando.executeUpdate();
 			
 			comando.close();
@@ -82,14 +82,14 @@ public class EmailDAO {
 		}
 		
 		public static boolean existData (String nome)  throws Exception{
-			EmailDAO tp = new EmailDAO ();
-			List<Email> tipos = new ArrayList<>(); 
-			tipos = tp.buscarEmail();
+			TipoDependentesDAO tp = new TipoDependentesDAO ();
+			List<TipoDependentes> tipos = new ArrayList<>(); 
+			tipos = tp.buscarTipoDependentes();
 			
 			for(int i = 0; i < tipos.size(); i++) {
-				Email t = new Email();
+				TipoDependentes t = new TipoDependentes();
 				t = tipos.get(i);
-				if(t.getEmail().equals(nome)) {
+				if(t.getNome().equals(nome)) {
 					return true;
 				}
 			}
@@ -98,32 +98,32 @@ public class EmailDAO {
 		
 		public static int maxId () throws Exception {
 			
-			EmailDAO tp = new EmailDAO();
-			List<Email> tipos = new ArrayList<>();
-			tipos = tp.buscarEmail();
+			TipoDependentesDAO tp = new TipoDependentesDAO();
+			List<TipoDependentes> tipos = new ArrayList<>();
+			tipos = tp.buscarTipoDependentes();
 			int id = 0;
 			
 			for(int i = 0; i < tipos.size(); i++) {
-				Email t = new Email();
+				TipoDependentes t = new TipoDependentes();
 				t = tipos.get(i);
-				if(t.getIdEmail() > id) {
-					id = t.getIdEmail();
+				if(t.getIdTipodependentes() > id) {
+					id = t.getIdTipodependentes();
 				}
 			}
 			return id + 1;
 		}
 		
 		public static int buscaId(String nome) throws Exception{
-			EmailDAO tp = new EmailDAO();
-			List<Email> tipos = new ArrayList<>();
-			tipos = tp.buscarEmail();
+			TipoDependentesDAO tp = new TipoDependentesDAO();
+			List<TipoDependentes> tipos = new ArrayList<>();
+			tipos = tp.buscarTipoDependentes();
 			int id = -1;
 			
 			for(int i = 0; i < tipos.size(); i++) {
-				Email t = new Email();
+				TipoDependentes t = new TipoDependentes();
 				t = tipos.get(i);
-				if(t.getEmail().equals(nome)) {
-					id = t.getIdEmail();
+				if(t.getNome().equals(nome)) {
+					id = t.getIdTipodependentes();
 				}
 			}
 			return id;
