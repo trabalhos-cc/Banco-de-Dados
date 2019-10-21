@@ -3,7 +3,7 @@ package endereco;
 public class Endereco {
 
 	private int idEndereco;
-	private String CEP;
+	private int CEP;
 	private int idCidade;
 	private int idbairro;
 	private int idLogradouro;
@@ -50,10 +50,10 @@ public class Endereco {
 		this.idEndereco = idEndereco;
 	}
 	
-	public String getCEP() {
+	public int getCEP() {
 		return CEP;
 	}
-	public void setCEP(String cEP) {
+	public void setCEP(int cEP) {
 		CEP = cEP;
 	}
 	

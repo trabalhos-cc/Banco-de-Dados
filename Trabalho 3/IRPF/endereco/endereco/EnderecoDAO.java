@@ -32,7 +32,7 @@ public class EnderecoDAO {
 			while(rs.next()) {
 				Endereco end = new Endereco();
 				end.setIdEndereco(rs.getInt("idEndereco"));
-				end.setCEP(rs.getString("CEP"));
+				end.setCEP(rs.getInt("CEP"));
 				end.setIdCidade(rs.getInt("idCidade"));
 				end.setIdbairro(rs.getInt("idBairro"));
 				end.setIdLogradouro(rs.getInt("idLogradouro"));

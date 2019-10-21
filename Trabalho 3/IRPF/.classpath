@@ -9,6 +9,7 @@
 	<classpathentry kind="src" path="contribuinte"/>
 	<classpathentry kind="src" path="telefone"/>
 	<classpathentry kind="src" path="dependentes"/>
+	<classpathentry kind="src" path="rendimento"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Conexão"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
