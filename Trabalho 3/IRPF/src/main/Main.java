@@ -1,20 +1,17 @@
 package main;
 
-import tipoLogradouro.TipoLogradouroDAO;
+import embaixada.EmbaixadaDAO;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception{
 		// TODO Auto-generated method stub
 
-		TipoLogradouroDAO b = new TipoLogradouroDAO();
-	
+		EmbaixadaDAO b = new EmbaixadaDAO();
 		try {
 			
-			b.inserirTipoLogradouro("Teste");
-			b.inserirTipoLogradouro("Teste1");
-			b.removeTipoLogradouro("Teste");
-			b.inserirTipoLogradouro("Teste2");
+		
+			b.removeEmbaixada("Brasil", "Cascavel");
 			
 		}catch(Exception e) {
 			System.out.println(e);

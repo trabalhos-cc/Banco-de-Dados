@@ -31,9 +31,9 @@ public class CidadeDAO {
 				
 				while(rs.next()) {
 					Cidade c = new Cidade();
-					c.setIdCidade(rs.getInt("idCidade"));
-					c.setNomeCidade(rs.getString("nomeCidade"));
-					c.setIdUF(rs.getInt("idUF"));
+					c.setIdCidade(rs.getInt("idcidade"));
+					c.setNomeCidade(rs.getString("nome"));
+					c.setIdUF(rs.getInt("iduf"));
 					cidades.add(c);
 				}
 			}catch(SQLException e) {
@@ -42,6 +42,37 @@ public class CidadeDAO {
 			conn.close();
 			return cidades;
 		}
+		
+		public Cidade buscarCidades(int id)throws Exception{
+			ResultSet rs = null;
+			PreparedStatement stmt = null;
+			Connection conn = conexao.abrir();
+			
+			Cidade c = new Cidade();
+			
+			try {
+				stmt = conn.prepareStatement("select * from cidade where idcidade = ? ;");
+				
+				
+				stmt = conn.prepareStatement(stmt.toString());
+				stmt.setInt(1, id);
+				//stmt.executeUpdate();
+				
+				rs = stmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					c.setIdCidade(rs.getInt("idcidade"));
+					c.setNomeCidade(rs.getString("nome"));
+					c.setIdUF(rs.getInt("iduf"));
+					
+				}
+			}catch(SQLException e) {
+				System.err.println(e);
+			}
+			conn.close();
+			return c;
+		}
 
 		//insert
 		public void inserirCidades (String nomeCidade, String idUf)throws Exception{
@@ -49,14 +80,14 @@ public class CidadeDAO {
 			if(CidadeDAO.existData(nomeCidade)) return;
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("insert into cidade (idCidade, nomeCidade, idUF)");
-			sql.append("select ?, ? , idUF from UF where nome = ?");
+			sql.append("insert into cidade (idcidade, nome, iduf)");
+			sql.append("select ?, ? , iduf from uf where nome = ?");
 			
 			Connection conn = conexao.abrir();
 			st = conn.createStatement();
 			
 			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			comando.setInt(1, id);
+			comando.setInt(1, maxId());
 			comando.setString(2, nomeCidade);
 			comando.setString(3, idUf);
 			comando.executeUpdate();
@@ -66,13 +97,27 @@ public class CidadeDAO {
 		}
 		
 		/*delete*/
+		public void removeCidade(String nome) throws Exception{
+			if(!CidadeDAO.existData(nome)) return;
+			StringBuilder sql = new StringBuilder();
+			
+			sql.append("delete from cidade where idcidade = ?;");
+			
+			Connection conn = conexao.abrir();
+			st = conn.createStatement();
+			PreparedStatement comando = conn.prepareStatement(sql.toString());
+			comando.setInt(1, buscaId(nome));
+			comando.executeUpdate();
+			
+			comando.close();
+			conn.close();
+		}
 		
 		public static boolean existData (String nome)  throws Exception{
 			CidadeDAO tp = new CidadeDAO ();
 			List<Cidade> tipos = new ArrayList<>(); 
-			
 			tipos = tp.buscarCidades();
-			CidadeDAO.id = tipos.size();
+			
 			for(int i = 0; i < tipos.size(); i++) {
 				Cidade t = new Cidade();
 				t = tipos.get(i);
@@ -80,7 +125,39 @@ public class CidadeDAO {
 					return true;
 				}
 			}
-			
 			return false;
+		}
+		
+		public static int maxId () throws Exception {
+			
+			CidadeDAO tp = new CidadeDAO ();
+			List<Cidade> tipos = new ArrayList<>(); 
+			tipos = tp.buscarCidades();
+			int id = 0;
+			
+			for(int i = 0; i < tipos.size(); i++) {
+				Cidade t = new Cidade();
+				t = tipos.get(i);
+				if(t.getIdCidade() > id) {
+					id = t.getIdCidade();
+				}
+			}
+			return id + 1;
+		}
+		
+		public static int buscaId(String nome) throws Exception{
+			CidadeDAO tp = new CidadeDAO ();
+			List<Cidade> tipos = new ArrayList<>(); 
+			tipos = tp.buscarCidades();
+			int id = -1;
+			
+			for(int i = 0; i < tipos.size(); i++) {
+				Cidade t = new Cidade();
+				t = tipos.get(i);
+				if(t.getNomeCidade().equals(nome)) {
+					id = t.getIdCidade();
+				}
+			}
+			return id;
 		}
 }
