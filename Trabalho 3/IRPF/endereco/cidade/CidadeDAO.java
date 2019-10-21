@@ -51,14 +51,17 @@ public class CidadeDAO {
 			Cidade c = new Cidade();
 			
 			try {
-				stmt = conn.prepareStatement("select * from cidade where idcidade = ? ;");
+				StringBuilder sql = new StringBuilder();
+				sql.append("select * from cidade where idcidade = ? ;");
+				//stmt = conn.prepareStatement();
 				
 				
-				stmt = conn.prepareStatement(stmt.toString());
+				stmt = conn.prepareStatement(sql.toString());
 				stmt.setInt(1, id);
 				//stmt.executeUpdate();
 				
 				rs = stmt.executeQuery();
+				
 				
 				while(rs.next()) {
 					

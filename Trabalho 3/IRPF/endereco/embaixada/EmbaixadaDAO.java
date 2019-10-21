@@ -53,9 +53,11 @@ public class EmbaixadaDAO {
 			
 			List<Embaixada> embaixada = new ArrayList<>();
 			try {
-				stmt = conn.prepareStatement("select * from embaixada where idpais = (select idpais from pais where nome = ?);");
+				StringBuilder sql = new StringBuilder();
+				sql.append("select * from embaixada where idpais = (select idpais from pais where nome = ?);");
+				//stmt = conn.prepareStatement();
 
-				stmt = conn.prepareStatement(stmt.toString());
+				stmt = conn.prepareStatement(sql.toString());
 				stmt.setString(1, idPais);
 				//stmt.executeUpdate();
 				
@@ -109,17 +111,19 @@ public class EmbaixadaDAO {
 			StringBuilder sql = new StringBuilder();
 			
 			try {
-			sql.append("delete from embaixada where idembaixada = ?;");
-			
-			Connection conn = conexao.abrir();
-			st = conn.createStatement();
-			PreparedStatement comando = conn.prepareStatement(sql.toString());
-			
-			comando.setInt(1, buscaId(pais, cidade));
-			comando.executeUpdate();
-			
-			comando.close();
-			conn.close();
+				Connection conn = conexao.abrir();
+				sql.append("delete from embaixada where idembaixada = ?;");
+				
+				
+				st = conn.createStatement();
+				PreparedStatement comando = conn.prepareStatement(sql.toString());
+				int id = buscaId(pais, cidade);
+				
+				comando.setInt(1, id);
+				comando.executeUpdate();
+				
+				comando.close();
+				conn.close();
 			}catch(Exception e) {
 				System.out.println(e);
 			}
@@ -145,6 +149,8 @@ public class EmbaixadaDAO {
 			}
 			return false;
 		} 
+		
+		
 		public static int maxId () throws Exception {
 			
 			EmbaixadaDAO tp = new EmbaixadaDAO ();
@@ -165,23 +171,28 @@ public class EmbaixadaDAO {
 		public static int buscaId(String pais, String cidade) throws Exception{
 			EmbaixadaDAO tp = new EmbaixadaDAO ();
 			List<Embaixada> tipos = new ArrayList<>(); 
-			tipos = tp.buscaEmbaixadaPais(pais);
 			Cidade c = new Cidade();
 			CidadeDAO cd = new CidadeDAO();
 			int id = -1;
 			
-			for(int i = 0; i < tipos.size(); i++) {
-				Embaixada t = new Embaixada();
-				
-				
-				t = tipos.get(i);
-				
-				c = cd.buscarCidades(t.getIdCidade());
-				if(c.getNomeCidade().equals(cidade)) {
-					id = t.getIdEmbaixada();
+			
+			try {
+				tipos = tp.buscaEmbaixadaPais(pais);
+				for(int i = 0; i < tipos.size(); i++) {
+					
+					Embaixada t = new Embaixada();
+					
+					
+					t = tipos.get(i);
+					
+					c = cd.buscarCidades(t.getIdCidade());
+					if(c.getNomeCidade().equals(cidade)) {
+						id = t.getIdEmbaixada();
+					}
 				}
+			}catch(Exception e) {
+				System.out.println(e);
 			}
-			System.out.println(id);
 			return id;
 		}
 }
