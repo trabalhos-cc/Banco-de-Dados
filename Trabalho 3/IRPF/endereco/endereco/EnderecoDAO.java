@@ -46,28 +46,36 @@ public class EnderecoDAO {
 	}
 	
 	//insert
-	public void inserirEndereco (String CEP, String idCidade,
-			String idBairro, String idLogradouro) throws Exception{
+	public void inserirEndereco (int CEP, String idCidade,
+			String idBairro, String idLogradouro, String tipo, int idEE) throws Exception{
 		
 		
-		if(EnderecoDAO.existData(CEP)) return;
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("insert into endereço (idEndereço, CEP, idCidade, idBairro, idLogradouro)");
-		sql.append("select ?, ? , ");
-		sql.append("(select idcidade from cidade where nomeCidade = ?), ");
+		sql.append("insert into endereco (idendereco, idenderecoExterior,  CEP, idtipoEndereco, idcidade, idbairro, idlogradouro)");
+		sql.append("select ?, ?, ?,");
+		sql.append("(select idtipoEndereco from tipoEndereco where tipo = ?), ");
+		sql.append("(select idcidade from cidade where nome = ?), ");
 		sql.append("(select idbairro from bairro where nome = ?),");
-		sql.append("(select idlogradouro from logradouro where nome = ?)");
-		
+		sql.append("(select idlogradouro from logradouro where nome = ?);");
+				
 		Connection conn = conexao.abrir();
 		st = conn.createStatement();
 		
 		PreparedStatement comando = conn.prepareStatement(sql.toString());
 		comando.setInt(1, id);
-		comando.setString(2, CEP);
-		comando.setString(3, idCidade);
-		comando.setString(4, idBairro);
-		comando.setString(5, idLogradouro);
+		
+		if(isExterior(tipo)) {
+			comando.setInt(2, idEE);
+		}else {
+			comando.setInt(2, 0);
+		}
+		
+		comando.setInt(3, CEP);
+		comando.setString(4, tipo);
+		comando.setString(5, idCidade);
+		comando.setString(6, idBairro);
+		comando.setString(7, idLogradouro);
 		comando.executeUpdate();
 		
 		comando.close();
@@ -75,21 +83,24 @@ public class EnderecoDAO {
 	}
 	
 	/*delete*/
-	
-	public static boolean existData (String CEP)  throws Exception{
-		EnderecoDAO tp = new EnderecoDAO ();
-		List<Endereco> tipos = new ArrayList<>(); 
+	public void removeEndereco(int id) throws Exception{
 		
-		tipos = tp.buscarEndereco();
-		EnderecoDAO.id = tipos.size();
-		for(int i = 0; i < tipos.size(); i++) {
-			Endereco t = new Endereco();
-			t = tipos.get(i);
-			if(t.getCEP().equals(CEP)) {
-				return true;
-			}
-		}
+		StringBuilder sql = new StringBuilder();
 		
-		return false;
+		sql.append("delete from endereco where idendereco = ?;");
+		
+		Connection conn = conexao.abrir();
+		st = conn.createStatement();
+		PreparedStatement comando = conn.prepareStatement(sql.toString());
+		comando.setInt(1, id);
+		comando.executeUpdate();
+		
+		comando.close();
+		conn.close();
 	}
+	
+	public static boolean isExterior (String tipo)  throws Exception{
+		return (tipo.equals("Exterior"));	
+	}
+	
 }
